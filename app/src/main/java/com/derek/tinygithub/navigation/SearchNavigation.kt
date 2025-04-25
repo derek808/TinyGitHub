@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.derek.tinygithub.ui.SearchRoute
+import com.derek.tinygithub.ui.screen.SearchScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,6 +17,6 @@ fun NavGraphBuilder.searchScreen(
     onRepoClick: (String) -> Unit,
 ) {
     composable<SearchRoute> {
-        SearchRoute(onRepoClick)
+        SearchScreen(onRepoClick)
     }
 }

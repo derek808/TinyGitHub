@@ -1,4 +1,4 @@
-package com.derek.tinygithub.ui
+package com.derek.tinygithub.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,13 +12,12 @@ import com.derek.tinygithub.Greeting
  * @author: derekzchen@2025/4/25
  */
 @Composable
-internal fun ProfileRoute(
-    onRepoClick: (String) -> Unit,
+fun RepoScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
         Greeting(
-            name = "Profile",
+            name = "Repo",
             modifier = modifier.padding(innerPadding)
         )
     }

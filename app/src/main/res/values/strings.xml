@@ -5,6 +5,10 @@
     <string name="tab_search_title">Search</string>
     <string name="tab_profile_title">Profile</string>
 
+    <string name="search_title">Search</string>
+
+    <string name="search_clear_search_text_content_desc">Clear search text</string>
+
     <string name="feature_bookmarks_empty_error">No saved updates</string>
     <string name="feature_bookmarks_empty_description">Updates you save will be stored here\nto read later</string>
 </resources>
