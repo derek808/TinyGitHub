@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.derek.tinygithub.ui.screen.ExploreScreen
+import com.derek.tinygithub.ui.explore.ExploreScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

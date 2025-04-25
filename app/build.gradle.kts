@@ -54,6 +54,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.material3.navigationSuite)
 
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.kotlin.serialization)
+
     implementation(libs.coil.kt.compose)
 
     testImplementation(libs.junit)

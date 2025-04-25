@@ -1,4 +1,4 @@
-package com.derek.tinygithub.ui.screen
+package com.derek.tinygithub.ui.explore
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.derek.tinygithub.navigation.RepoListItem
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -42,15 +41,17 @@ internal fun ExploreScreen(
     onRepoClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val exploreViewModel = ExploreViewModel()
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
-        TabHost(
-            modifier = modifier.padding(innerPadding),
-        )
+        TabHost(modifier = modifier.padding(innerPadding), exploreViewModel)
     }
 }
 
 @Composable
-fun TabHost(modifier: Modifier = Modifier) {
+fun TabHost(
+    modifier: Modifier = Modifier,
+    exploreViewModel: ExploreViewModel
+) {
     val tabData = listOf("Popular", "Trending")
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -82,20 +83,24 @@ fun TabHost(modifier: Modifier = Modifier) {
 
         // 根据选中的 Tab 显示对应的页面
         when (selectedTabIndex) {
-            0 -> PopularTabPage(modifier, page1State)
+            0 -> PopularTabPage(modifier, page1State, exploreViewModel)
             1 -> TrendingTabPage()
         }
     }
 }
 
 @Composable
-fun PopularTabPage(modifier: Modifier = Modifier, scrollableState: LazyListState) {
+fun PopularTabPage(
+    modifier: Modifier = Modifier,
+    scrollableState: LazyListState,
+    exploreViewModel: ExploreViewModel
+) {
     Column(
 //        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        PullRefreshComponent(modifier, scrollableState)
+        PullRefreshComponent(modifier, scrollableState, exploreViewModel)
     }
 }
 
@@ -114,7 +119,8 @@ fun TrendingTabPage(modifier: Modifier = Modifier) {
 @Composable
 fun PullRefreshComponent(
     modifier: Modifier = Modifier,
-    scrollableState: LazyListState // 通过参数传递 scrollableState
+    scrollableState: LazyListState,
+    exploreViewModel: ExploreViewModel,
 ) {
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
@@ -123,8 +129,9 @@ fun PullRefreshComponent(
     fun refresh() =
         refreshScope.launch {
             refreshing = true
-            delay(1500)
-            itemCount += 5
+            /*delay(1500)
+            itemCount += 5*/
+            exploreViewModel.fetchPopularRepos()
             refreshing = false
         }
 
@@ -137,6 +144,16 @@ fun PullRefreshComponent(
             state = scrollableState,
         ) {
             if (!refreshing) {
+                /*exploreViewModel.popularRepos.forEach {
+                    item {
+                        RepoListItem(
+                            name = it.full_name,
+                            description = it.description ?: "",
+                            avatarUrl = "",
+                            forks = 10,
+                        )
+                    }
+                }*/
                 items(itemCount) {
                     RepoListItem(
                         name = "Item $it",
@@ -156,5 +173,5 @@ fun PullRefreshComponent(
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    TabHost()
+    TabHost(exploreViewModel = ExploreViewModel())
 }
