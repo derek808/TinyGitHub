@@ -19,6 +19,7 @@ data class RepoDetail(
     @SerialName("stargazers_count") val starsCount: Int,
     @SerialName("forks_count") val forksCount: Int,
     val language: String?,
+    @SerialName("html_url") val htmlUrl: String,
     val owner: Owner?,
 )
 

@@ -55,8 +55,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.material3.navigationSuite)
+    implementation(libs.androidx.browser)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)

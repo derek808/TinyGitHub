@@ -1,6 +1,7 @@
 package com.derek.tinygithub.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -31,8 +32,10 @@ fun RepoListItem(
     stars: Int,
     forks: Int,
     iconModifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     ListItem(
+        modifier = Modifier.clickable { onClick() },
         leadingContent = {
             AvatarIcon(avatarUrl, iconModifier.size(48.dp))
         },
@@ -85,7 +88,7 @@ private fun RepoListItemPreview() {
                 avatarUrl = "https://avatars.githubusercontent.com/u/9892522?v=4",
                 stars = 123456,
                 forks = 39899,
-            )
+            ) {}
         }
     }
 }

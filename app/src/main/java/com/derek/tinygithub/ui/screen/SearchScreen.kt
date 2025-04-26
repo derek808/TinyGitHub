@@ -51,7 +51,9 @@ private fun SearchResult(modifier: Modifier = Modifier) {
                 avatarUrl = "",
                 stars = 100,
                 forks = 10,
-            )
+            ) {
+
+            }
         }
     }
 }
