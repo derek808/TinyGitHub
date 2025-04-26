@@ -1,22 +1,34 @@
 package com.derek.tinygithub.ui.explore
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.derek.tinygithub.data.RepoDataSource
-import com.derek.tinygithub.network.model.RepoDetail
+import com.derek.tinygithub.data.RepoRepository
+import com.derek.tinygithub.data.RepoRepositoryImpl
+import com.derek.tinygithub.ui.RepoUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ExploreViewModel : ViewModel() {
+@HiltViewModel
+class ExploreViewModel @Inject constructor() : ViewModel() {
 
-    private val dataSource = RepoDataSource
+    private val repository: RepoRepository = RepoRepositoryImpl()
 
-    private val _popularRepos = mutableStateOf<List<RepoDetail>>(emptyList())
-    val popularRepos: List<RepoDetail> = _popularRepos.value
+    private val _repoStateFlow: MutableStateFlow<RepoUiState> = MutableStateFlow(RepoUiState.Loading)
+    val repoStateFlow: StateFlow<RepoUiState> = _repoStateFlow
+
+    init {
+        fetchPopularRepos()
+    }
 
     fun fetchPopularRepos() {
         viewModelScope.launch {
-            _popularRepos.value = dataSource.fetchPopularRepos()
+            val flow = repository.fetchPopularReposFlow()
+            flow.collect {
+                _repoStateFlow.emit(it)
+            }
         }
     }
 }

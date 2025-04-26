@@ -11,7 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.derek.tinygithub.ui.TgApp
 import com.derek.tinygithub.ui.rememberTgAppState
 import com.derek.tinygithub.ui.theme.TinyGitHubTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

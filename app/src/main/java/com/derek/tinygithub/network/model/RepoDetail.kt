@@ -1,11 +1,12 @@
 package com.derek.tinygithub.network.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchResult(
-    val total_count: Int,
-    val incomplete_results: Boolean,
+    @SerialName("total_count") val totalCount: Int,
+    @SerialName("incomplete_results") val incompleteResults: Boolean,
     val items: List<RepoDetail>
 )
 
@@ -13,9 +14,18 @@ data class SearchResult(
 data class RepoDetail(
     val id: Int,
     val name: String,
-    val full_name: String,
+    @SerialName("full_name") val fullName: String,
     val description: String?,
-    val stargazers_count: Int,
-    val forks_count: Int,
-    val language: String?
+    @SerialName("stargazers_count") val starsCount: Int,
+    @SerialName("forks_count") val forksCount: Int,
+    val language: String?,
+    val owner: Owner?,
+)
+
+@Serializable
+data class Owner(
+    val login: String,
+    val id: Int,
+    @SerialName("avatar_url") val avatarUrl: String,
+    @SerialName("html_url") val htmlUrl: String
 )

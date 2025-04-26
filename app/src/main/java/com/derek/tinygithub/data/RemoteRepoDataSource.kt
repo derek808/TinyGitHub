@@ -5,7 +5,7 @@ import com.derek.tinygithub.network.model.RepoDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-object RepoDataSource {
+object RemoteRepoDataSource {
 
     private val api = RetrofitTgNetwork()
 

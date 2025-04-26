@@ -49,6 +49,7 @@ private fun SearchResult(modifier: Modifier = Modifier) {
                 name = "Item $it",
                 description = "Description",
                 avatarUrl = "",
+                stars = 100,
                 forks = 10,
             )
         }

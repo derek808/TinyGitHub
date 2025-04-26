@@ -10,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
-private interface RetrofitNiaNetworkApi {
+private interface RetrofitTgNetworkApi {
 
     @GET("search/repositories")
     suspend fun searchRepositories(
@@ -54,7 +54,7 @@ class RetrofitTgNetwork {
                 networkJson.asConverterFactory("application/json".toMediaType()),
             )
             .build()
-            .create(RetrofitNiaNetworkApi::class.java)
+            .create(RetrofitTgNetworkApi::class.java)
 
     suspend fun searchRepositories(): SearchResult {
         return networkApi.searchRepositories()

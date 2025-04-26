@@ -7,8 +7,10 @@ import androidx.compose.material.icons.outlined.Upcoming
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DisabledByDefault
+import androidx.compose.material.icons.rounded.ForkRight
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.StarBorder
 import androidx.compose.material.icons.rounded.Upcoming
 
 /**
@@ -29,6 +31,7 @@ object TgIcons {
     val ProfileBorder = Icons.Outlined.AccountCircle
 
     val Person = Icons.Rounded.Person
-
     val Close = Icons.Rounded.Close
+    val Stars = Icons.Rounded.StarBorder
+    val Fork = Icons.Rounded.ForkRight
 }

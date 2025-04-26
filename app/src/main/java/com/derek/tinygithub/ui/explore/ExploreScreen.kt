@@ -28,8 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.derek.tinygithub.navigation.RepoListItem
+import com.derek.tinygithub.ui.RepoUiState
 import kotlinx.coroutines.launch
 
 /**
@@ -39,9 +43,9 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun ExploreScreen(
     onRepoClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    exploreViewModel: ExploreViewModel = hiltViewModel(),
 ) {
-    val exploreViewModel = ExploreViewModel()
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
         TabHost(modifier = modifier.padding(innerPadding), exploreViewModel)
     }
@@ -57,6 +61,8 @@ fun TabHost(
 
     val page1State = rememberLazyListState()
     val page2State = rememberLazyListState()
+
+    val uiState by exploreViewModel.repoStateFlow.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -83,7 +89,10 @@ fun TabHost(
 
         // 根据选中的 Tab 显示对应的页面
         when (selectedTabIndex) {
-            0 -> PopularTabPage(modifier, page1State, exploreViewModel)
+            0 -> PopularTabPage(page1State, uiState) {
+                exploreViewModel.fetchPopularRepos()
+            }
+
             1 -> TrendingTabPage()
         }
     }
@@ -91,16 +100,15 @@ fun TabHost(
 
 @Composable
 fun PopularTabPage(
-    modifier: Modifier = Modifier,
     scrollableState: LazyListState,
-    exploreViewModel: ExploreViewModel
+    repoUiState: RepoUiState,
+    onRefresh: () -> Unit,
 ) {
     Column(
-//        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        PullRefreshComponent(modifier, scrollableState, exploreViewModel)
+        PullRefreshComponent(scrollableState, repoUiState, onRefresh)
     }
 }
 
@@ -118,49 +126,58 @@ fun TrendingTabPage(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PullRefreshComponent(
-    modifier: Modifier = Modifier,
     scrollableState: LazyListState,
-    exploreViewModel: ExploreViewModel,
+    repoUiState: RepoUiState,
+    onRefresh: () -> Unit,
 ) {
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
-    var itemCount by remember { mutableStateOf(15) }
 
     fun refresh() =
         refreshScope.launch {
+            if (repoUiState is RepoUiState.Success) {
+                return@launch
+            }
             refreshing = true
-            /*delay(1500)
-            itemCount += 5*/
-            exploreViewModel.fetchPopularRepos()
-            refreshing = false
+            onRefresh()
         }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
-//    val scrollableState = rememberLazyListState()
 
     Box(Modifier.pullRefresh(state)) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = scrollableState,
         ) {
-            if (!refreshing) {
-                /*exploreViewModel.popularRepos.forEach {
+            when (repoUiState) {
+                is RepoUiState.Loading -> {
+                    refreshing = true
+                }
+
+                is RepoUiState.Error -> {
+                    refreshing = false
                     item {
-                        RepoListItem(
-                            name = it.full_name,
-                            description = it.description ?: "",
-                            avatarUrl = "",
-                            forks = 10,
+                        Text(
+                            text = "Error: ${repoUiState.message}",
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(16.dp)
                         )
                     }
-                }*/
-                items(itemCount) {
-                    RepoListItem(
-                        name = "Item $it",
-                        description = "Description",
-                        avatarUrl = "",
-                        forks = 10,
-                    )
+                }
+
+                is RepoUiState.Success -> {
+                    refreshing = false
+                    repoUiState.repos.forEach {
+                        item {
+                            RepoListItem(
+                                name = it.fullName,
+                                description = it.description ?: "",
+                                avatarUrl = it.owner?.avatarUrl ?: "",
+                                stars = it.starsCount,
+                                forks = it.forksCount,
+                            )
+                        }
+                    }
                 }
             }
         }
